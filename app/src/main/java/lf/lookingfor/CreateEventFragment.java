@@ -13,6 +13,7 @@ public class CreateEventFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_fragment_create_event);
         return inflater.inflate(R.layout.fragment_create_event, null);
     }
 
@@ -20,7 +21,7 @@ public class CreateEventFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.create_event).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
 
