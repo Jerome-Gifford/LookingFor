@@ -83,6 +83,9 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_myEvents) {
             //handle action
         }
+        else if (id == R.id.nav_logout){
+            //handle actions
+        }
 
         if(fragment != null){
             FragmentManager fragmentManager = getSupportFragmentManager();
