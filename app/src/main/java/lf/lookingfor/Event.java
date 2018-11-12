@@ -1,5 +1,7 @@
 package lf.lookingfor;
 
+import java.lang.reflect.Field;
+
 public class Event {
     private String name;
     private String startTime;
@@ -10,9 +12,16 @@ public class Event {
     private int ageMin;
     private int ageMax;
     private String description;
+    private String eventAddress;
+    private String eventCity;
+    private String eventState;
+    private String eventZip;
     //private String category;
 
-    public Event(String name, String startTime, String endTime, String date, int minParticipants, int maxParticipants, int ageMin, int ageMax, String description) {
+
+    public Event(String name, String startTime, String endTime, String date, int minParticipants,
+                 int maxParticipants, int ageMin, int ageMax, String description, String eventAddress,
+                 String eventCity, String eventState, String eventZip) {
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -22,7 +31,42 @@ public class Event {
         this.ageMin = ageMin;
         this.ageMax = ageMax;
         this.description = description;
-        //this.category = category;
+        this.eventAddress = eventAddress;
+        this.eventCity = eventCity;
+        this.eventState = eventState;
+        this.eventZip = eventZip;
+    }
+
+    public String getEventAddress() {
+        return eventAddress;
+    }
+
+    public void setEventAddress(String eventAddress) {
+        this.eventAddress = eventAddress;
+    }
+
+    public String getEventCity() {
+        return eventCity;
+    }
+
+    public void setEventCity(String eventCity) {
+        this.eventCity = eventCity;
+    }
+
+    public String getEventState() {
+        return eventState;
+    }
+
+    public void setEventState(String eventState) {
+        this.eventState = eventState;
+    }
+
+    public String getEventZip() {
+        return eventZip;
+    }
+
+    public void setEventZip(String eventZip) {
+        this.eventZip = eventZip;
     }
 
     public int getMinParticipants() {

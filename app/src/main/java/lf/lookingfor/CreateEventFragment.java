@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.security.cert.TrustAnchor;
+
 public class CreateEventFragment extends Fragment {
     EditText event_name;
     EditText event_date;
@@ -43,38 +45,59 @@ public class CreateEventFragment extends Fragment {
         mainView.findViewById(R.id.create_event).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                createEvent(mainView);
-                Toast.makeText(getActivity(), "Create Event!", Toast.LENGTH_SHORT).show();
+                String eventResult = createEvent(mainView);
+                if(eventResult.equals("Event Created")) {
+                    Toast.makeText(getActivity(), "Event Created", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), "You are missing " + eventResult, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
-    public void createEvent(View view){
-        event_name = (EditText) view.findViewById(R.id.event_name);
-        event_date= (EditText) view.findViewById(R.id.event_date);
-        start_time= (EditText) view.findViewById(R.id.start_time);
-        end_time= (EditText) view.findViewById(R.id.end_time);
-        min_number= (EditText) view.findViewById(R.id.min_number);
-        max_number= (EditText) view.findViewById(R.id.max_number);
-        min_age= (EditText) view.findViewById(R.id.min_age);
-        max_age= (EditText) view.findViewById(R.id.max_age);
-        event_desc= (EditText) view.findViewById(R.id.event_desc);
-        event_address= (EditText) view.findViewById(R.id.event_address);
-        event_city= (EditText) view.findViewById(R.id.event_city);
-        event_state= (EditText) view.findViewById(R.id.event_state);
-        event_ZIP= (EditText) view.findViewById(R.id.event_ZIP);
-        Event event = new Event(
-                event_name.getText().toString().trim(),
-                start_time.getText().toString().trim(),
-                end_time.getText().toString().trim(),
-                event_date.getText().toString().trim(),
-                Integer.parseInt(min_number.getText().toString().trim()),
-                Integer.parseInt(max_number.getText().toString().trim()),
-                Integer.parseInt(min_age.getText().toString().trim()),
-                Integer.parseInt(max_age.getText().toString().trim()),
-                event_desc.getText().toString().trim()
-        );
-        DatabaseReference myRef = database.getReference("events").push();
-        myRef.setValue(event);
+    public String createEvent(View view){
+        try{
+            event_name = (EditText) view.findViewById(R.id.event_name);
+            event_date= (EditText) view.findViewById(R.id.event_date);
+            start_time= (EditText) view.findViewById(R.id.start_time);
+            end_time= (EditText) view.findViewById(R.id.end_time);
+            min_number= (EditText) view.findViewById(R.id.min_number);
+            max_number= (EditText) view.findViewById(R.id.max_number);
+            min_age= (EditText) view.findViewById(R.id.min_age);
+            max_age= (EditText) view.findViewById(R.id.max_age);
+            event_desc= (EditText) view.findViewById(R.id.event_desc);
+            event_address= (EditText) view.findViewById(R.id.event_address);
+            event_city= (EditText) view.findViewById(R.id.event_city);
+            event_state= (EditText) view.findViewById(R.id.event_state);
+            event_ZIP= (EditText) view.findViewById(R.id.event_ZIP);
+            String eventName = event_name.getText().toString().trim();
+            if(eventName.equals("")){
+                return "Event Name";
+            }
+            String startTime = start_time.getText().toString().trim();
+            String endTime = end_time.getText().toString().trim();
+            String eventDate = event_date.getText().toString().trim();
+            if(eventDate.equals("")){
+                return "Event Date";
+            }
+            int minParticipants = Integer.parseInt(min_number.getText().toString().trim());
+            int maxParticipants = Integer.parseInt(max_number.getText().toString().trim());
+            int minAge = Integer.parseInt(min_age.getText().toString().trim());
+            int maxAge = Integer.parseInt(max_age.getText().toString().trim());
+            String eventDesc = event_desc.getText().toString().trim();
+            String eventAddress = event_address.getText().toString().trim();
+            String eventCity = event_city.getText().toString().trim();
+            String eventState = event_city.getText().toString().trim();
+            String eventZip = event_ZIP.getText().toString().trim();
+            Event event = new Event(eventName, startTime, endTime, eventDate, minParticipants, maxParticipants,
+                minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip);
+            DatabaseReference myRef = database.getReference("events").push();
+            myRef.setValue(event);
+        }
+        catch (Exception e){
+            return "Participants or Age";
+        }
+        return "Event Created";
     }
 }
