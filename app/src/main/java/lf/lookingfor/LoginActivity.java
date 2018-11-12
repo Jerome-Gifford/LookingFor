@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +31,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,17 +49,76 @@ import static android.Manifest.permission.READ_CONTACTS;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    ProgressBar progressBar;
+    EditText editTextEmail, editTextPassword;
+    FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        editTextEmail = (EditText) findViewById(R.id.login_email);
+        editTextPassword = (EditText) findViewById(R.id.login_password);
+        progressBar = (ProgressBar) findViewById(R.id.login_progress);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        findViewById(R.id.email_sign_in_button).setOnClickListener(this);
         findViewById(R.id.textViewSignup).setOnClickListener(this);
+    }
+
+    private void userLogin() {
+        String email = editTextEmail.getText().toString().trim();
+        String password= editTextPassword.getText().toString().trim();
+
+        if(email.isEmpty()){
+            editTextEmail.setError("Email cannot be blank.");
+            editTextEmail.requestFocus();
+            return;
+        }
+
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            editTextEmail.setError("Email is not valid");
+            editTextEmail.requestFocus();
+            return;
+        }
+
+        if(password.length() < 6){
+            editTextPassword.setError("Password minimum length is 6.");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        if(password.isEmpty()){
+            editTextPassword.setError("Password cannot be blank.");
+            editTextPassword.requestFocus();
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                if(task.isSuccessful()){
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()){
+            case R.id.email_sign_in_button:
+                userLogin();
+                break;
             case R.id.textViewSignup:
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                 break;
