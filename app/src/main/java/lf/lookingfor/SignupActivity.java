@@ -72,9 +72,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
-                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                    getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    finish();
+                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
                 }else{
                     if(task.getException() instanceof FirebaseAuthUserCollisionException){
                         Toast.makeText(getApplicationContext(), "User registration unsuccessful. Email is already registered.", Toast.LENGTH_SHORT).show();
@@ -94,6 +93,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.textViewLogin:
+                finish();
                 startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                 break;
         }
