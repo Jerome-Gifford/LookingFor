@@ -1,7 +1,5 @@
 package lf.lookingfor;
 
-import java.lang.reflect.Field;
-
 public class Event {
     private String name;
     private String startTime;
@@ -16,12 +14,12 @@ public class Event {
     private String eventCity;
     private String eventState;
     private String eventZip;
-    //private String category;
+    private String category;
 
 
     public Event(String name, String startTime, String endTime, String date, int minParticipants,
                  int maxParticipants, int ageMin, int ageMax, String description, String eventAddress,
-                 String eventCity, String eventState, String eventZip) {
+                 String eventCity, String eventState, String eventZip, String category) {
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -35,6 +33,15 @@ public class Event {
         this.eventCity = eventCity;
         this.eventState = eventState;
         this.eventZip = eventZip;
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getEventAddress() {

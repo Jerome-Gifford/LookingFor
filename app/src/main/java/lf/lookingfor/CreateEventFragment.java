@@ -7,13 +7,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.cert.TrustAnchor;
+import java.util.List;
 
 public class CreateEventFragment extends Fragment {
     EditText event_name;
@@ -29,6 +36,7 @@ public class CreateEventFragment extends Fragment {
     EditText event_city;
     EditText event_state;
     EditText event_ZIP;
+    Spinner categorySpinner;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     @Nullable
@@ -41,7 +49,23 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(mainView, savedInstanceState);
+        DatabaseReference myRef = database.getReference("categories");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {};
+                List<String> categories = dataSnapshot.getValue(t);
+                Spinner s = (Spinner) mainView.findViewById(R.id.category);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                s.setAdapter(adapter);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read has failed");
+            }
+        });
         mainView.findViewById(R.id.create_event).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -71,6 +95,7 @@ public class CreateEventFragment extends Fragment {
             event_city= (EditText) view.findViewById(R.id.event_city);
             event_state= (EditText) view.findViewById(R.id.event_state);
             event_ZIP= (EditText) view.findViewById(R.id.event_ZIP);
+            categorySpinner = (Spinner) view.findViewById(R.id.category);
             String eventName = event_name.getText().toString().trim();
             if(eventName.equals("")){
                 return "Event Name";
@@ -90,8 +115,10 @@ public class CreateEventFragment extends Fragment {
             String eventCity = event_city.getText().toString().trim();
             String eventState = event_city.getText().toString().trim();
             String eventZip = event_ZIP.getText().toString().trim();
+            String category = categorySpinner.getSelectedItem().toString();
+            System.out.println(category);
             Event event = new Event(eventName, startTime, endTime, eventDate, minParticipants, maxParticipants,
-                minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip);
+                minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip, category);
             DatabaseReference myRef = database.getReference("events").push();
             myRef.setValue(event);
         }
