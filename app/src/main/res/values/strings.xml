@@ -12,6 +12,10 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="action_user_birthyear">Enter your birth year</string>
+    <string name="action_choose_picture">Choose your profile picture</string>
+    <string name="action_choose_display_name">Choose a display name</string>
+    <string name="action_confirm_profile">Confirm profile</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_sign_up_short">Sign up</string>
