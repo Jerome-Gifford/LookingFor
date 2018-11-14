@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     TextView nView;
     TextView eView;
     String profileImageUrl;
+    User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,10 @@ public class MainActivity extends AppCompatActivity
         if(fbAuth.getCurrentUser() == null){
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }else{
+            user.setDisplayName(fbAuth.getCurrentUser().getDisplayName());
+            user.setUserEmail(fbAuth.getCurrentUser().getEmail());
+            user.setUserPhoto(fbAuth.getCurrentUser().getPhotoUrl().toString());
         }
     }
 
