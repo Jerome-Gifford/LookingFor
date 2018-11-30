@@ -1,144 +1,191 @@
 package lf.lookingfor;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.w3c.dom.Text;
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
+import lf.lookingfor.fragment.ContentFragment;
+import lf.lookingfor.fragment.CreateEventFragment;
+import yalantis.com.sidemenu.interfaces.Resourceble;
+import yalantis.com.sidemenu.interfaces.ScreenShotable;
+import yalantis.com.sidemenu.model.SlideMenuItem;
+import yalantis.com.sidemenu.util.ViewAnimator;
 
-import java.io.IOException;
+public class MainActivity extends AppCompatActivity implements ViewAnimator.ViewAnimatorListener {
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private List<SlideMenuItem> list = new ArrayList<>();
+    private ContentFragment contentFragment;
+    private ViewAnimator viewAnimator;
+    private int res = R.drawable.content_music;
+    private LinearLayout linearLayout;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
-    FirebaseAuth fbAuth;
-    NavigationView navigationView;
-    ImageView iView;
-    TextView nView;
-    TextView eView;
-    String profileImageUrl;
-    User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        contentFragment = ContentFragment.newInstance(R.drawable.content_music);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, contentFragment)
+                .commit();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setScrimColor(Color.TRANSPARENT);
+        linearLayout = (LinearLayout) findViewById(R.id.left_drawer);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawers();
+            }
+        });
+
+
+        setActionBar();
+        createMenuList();
+        viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
+    }
+
+    private void createMenuList() {
+        SlideMenuItem menuItem0 = new SlideMenuItem(ContentFragment.CLOSE, R.drawable.icn_close);
+        list.add(menuItem0);
+        //SlideMenuItem menuItem = new SlideMenuItem(ContentFragment.JOIN_EVENT, R.drawable.icn_1);
+        //list.add(menuItem);
+        //SlideMenuItem menuItem2 = new SlideMenuItem(ContentFragment.MY_EVENTS, R.drawable.icn_2);
+        //list.add(menuItem2);
+        SlideMenuItem menuItem3 = new SlideMenuItem(ContentFragment.CREATE_EVENT, R.drawable.icn_3);
+        list.add(menuItem3);
+        //SlideMenuItem menuItem4 = new SlideMenuItem(ContentFragment.SIGNOUT, R.drawable.icn_4);
+        //list.add(menuItem4);
+    }
+
+
+    private void setActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(Html.fromHtml("<font color='#FFFFFF'>SideMenu </font>"));
+        drawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                drawerLayout,         /* DrawerLayout object */
+                toolbar,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+        ) {
 
-        fbAuth = FirebaseAuth.getInstance();
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                linearLayout.removeAllViews();
+                linearLayout.invalidate();
+            }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                if (slideOffset > 0.6 && linearLayout.getChildCount() == 0)
+                    viewAnimator.showMenuContent();
+            }
 
-        navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        drawerLayout.setDrawerListener(drawerToggle);
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
-        if(fbAuth.getCurrentUser() == null){
-            finish();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        }else{
-            user.setDisplayName(fbAuth.getCurrentUser().getDisplayName());
-            user.setUserEmail(fbAuth.getCurrentUser().getEmail());
-            user.setUserPhoto(fbAuth.getCurrentUser().getPhotoUrl().toString());
-        }
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    private ScreenShotable replaceCreateEventFragment(ScreenShotable screenShotable, int topPosition) {
+        View view = findViewById(R.id.content_frame);
+        int finalRadius = Math.max(view.getWidth(), view.getHeight());
+        SupportAnimator animator = ViewAnimationUtils.createCircularReveal(view, 0, topPosition, 0, finalRadius);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
+
+        animator.start();
+        CreateEventFragment createEventFragment = new CreateEventFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, createEventFragment).commit();
+        return createEventFragment;
+    }
+
+
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        Fragment fragment = null;
-        int id = item.getItemId();
-
-        if (id == R.id.nav_findEvent) {
-            //handle action
-        } else if (id == R.id.nav_createEvent) {
-            fragment = new CreateEventFragment();
+    public ScreenShotable onSwitch(Resourceble slideMenuItem, ScreenShotable screenShotable, int position) {
+        switch (slideMenuItem.getName()) {
+            case ContentFragment.CREATE_EVENT:
+                return replaceCreateEventFragment(screenShotable, position);
+            default:
+                return replaceCreateEventFragment(screenShotable, position);
         }
-        else if (id == R.id.nav_myEvents) {
-            //handle action
-        }
-        else if (id == R.id.nav_logout){
-            FirebaseAuth.getInstance().signOut();
-            finish();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        }
+    }
 
-        if(fragment != null){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction ft = fragmentManager.beginTransaction();
+    @Override
+    public void disableHomeButton() {
+        getSupportActionBar().setHomeButtonEnabled(false);
 
-            ft.replace(R.id.screen_area, fragment);
+    }
 
-            ft.commit();
-        }
+    @Override
+    public void enableHomeButton() {
+        getSupportActionBar().setHomeButtonEnabled(true);
+        drawerLayout.closeDrawers();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    }
+
+    @Override
+    public void addViewToContainer(View view) {
+        linearLayout.addView(view);
     }
 }
