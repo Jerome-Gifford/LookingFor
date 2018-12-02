@@ -31,9 +31,9 @@ public class CreateEventFragment extends Fragment {
     EditText max_number;
     EditText min_age;
     EditText max_age;
-    EditText event_desc;
-    EditText event_address;
-    EditText event_city;
+        EditText event_desc;
+        EditText event_address;
+        EditText event_city;
     EditText event_state;
     EditText event_ZIP;
     Spinner categorySpinner;

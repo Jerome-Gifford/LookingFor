@@ -1,6 +1,8 @@
 package lf.lookingfor;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +36,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 @Override public void onClick(View v) {
                     int position = getAdapterPosition();
 
-                    Snackbar.make(v, "Click detected on item " + position,
-                            Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    ViewEventFragment myFragment = new ViewEventFragment();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.screen_area, myFragment).addToBackStack(null).commit();
 
                 }
             });
