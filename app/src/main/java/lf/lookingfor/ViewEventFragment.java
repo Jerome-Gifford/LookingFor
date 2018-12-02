@@ -14,4 +14,9 @@ public class ViewEventFragment extends Fragment {
         getActivity().setTitle("Event");
         return inflater.inflate(R.layout.fragment_view_event, null);
     }
+
+    public void addUserToEvent(View view){
+
+    }
+
 }
