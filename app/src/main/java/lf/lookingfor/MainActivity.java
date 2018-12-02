@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_findEvent) {
-            //handle action
+            fragment = new JoinEventFragment();
         } else if (id == R.id.nav_createEvent) {
             fragment = new CreateEventFragment();
         }
