@@ -116,8 +116,8 @@ public class Event {
 
     public String getCurrentUserId() {return currentUserId;}
 
-    public void setCurrentUserID(String userID) {
-        this.currentUserId = userID;
+    public void setCurrentUserId(String userId) {
+        this.currentUserId = userId;
     }
 
     public void setDescription(String description) {

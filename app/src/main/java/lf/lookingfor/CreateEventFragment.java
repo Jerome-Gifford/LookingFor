@@ -126,6 +126,7 @@ public class CreateEventFragment extends Fragment {
             String eventZip = event_ZIP.getText().toString().trim();
             String category = categorySpinner.getSelectedItem().toString();
             String currentUserId = userId;
+            System.out.println(category);
             Event event = new Event(eventName, startTime, endTime, eventDate, minParticipants, maxParticipants,
                 minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip, category, currentUserId);
             System.out.println(currentUserId);
