@@ -15,11 +15,12 @@ public class Event {
     private String eventState;
     private String eventZip;
     private String category;
+    private String currentUserId;
 
 
     public Event(String name, String startTime, String endTime, String date, int minParticipants,
                  int maxParticipants, int ageMin, int ageMax, String description, String eventAddress,
-                 String eventCity, String eventState, String eventZip, String category) {
+                 String eventCity, String eventState, String eventZip, String category, String currentUserId) {
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -34,6 +35,7 @@ public class Event {
         this.eventState = eventState;
         this.eventZip = eventZip;
         this.category = category;
+        this.currentUserId = currentUserId;
     }
 
     public String getCategory() {
@@ -110,6 +112,12 @@ public class Event {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getCurrentUserId() {return currentUserId;}
+
+    public void setCurrentUserID(String userID) {
+        this.currentUserId = userID;
     }
 
     public void setDescription(String description) {
