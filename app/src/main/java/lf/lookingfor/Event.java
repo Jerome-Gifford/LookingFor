@@ -1,6 +1,9 @@
 package lf.lookingfor;
 
-public class Event {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Event implements Parcelable {
     private String name;
     private String startTime;
     private String endTime;
@@ -16,6 +19,9 @@ public class Event {
     private String eventZip;
     private String category;
 
+    public Event(){
+
+    }
 
     public Event(String name, String startTime, String endTime, String date, int minParticipants,
                  int maxParticipants, int ageMin, int ageMax, String description, String eventAddress,
@@ -35,6 +41,35 @@ public class Event {
         this.eventZip = eventZip;
         this.category = category;
     }
+
+    protected Event(Parcel in) {
+        name = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
+        date = in.readString();
+        minParticipants = in.readInt();
+        maxParticipants = in.readInt();
+        ageMin = in.readInt();
+        ageMax = in.readInt();
+        description = in.readString();
+        eventAddress = in.readString();
+        eventCity = in.readString();
+        eventState = in.readString();
+        eventZip = in.readString();
+        category = in.readString();
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 
     public String getCategory() {
         return category;
@@ -154,5 +189,28 @@ public class Event {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.startTime);
+        dest.writeString(this.endTime);
+        dest.writeString(this.date);
+        dest.writeInt(this.minParticipants);
+        dest.writeInt(this.maxParticipants);
+        dest.writeInt(this.ageMin);
+        dest.writeInt(this.ageMax);
+        dest.writeString(this.description);
+        dest.writeString(this.eventAddress);
+        dest.writeString(this.eventCity);
+        dest.writeString(this.eventState);
+        dest.writeString(this.eventZip);
+        dest.writeString(this.category);
     }
 }
