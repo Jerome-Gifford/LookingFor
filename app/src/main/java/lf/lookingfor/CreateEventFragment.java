@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,12 +33,15 @@ public class CreateEventFragment extends Fragment {
     EditText max_number;
     EditText min_age;
     EditText max_age;
-        EditText event_desc;
-        EditText event_address;
-        EditText event_city;
+    EditText event_desc;
+    EditText event_address;
+    EditText event_city;
     EditText event_state;
     EditText event_ZIP;
+    String userId;
     Spinner categorySpinner;
+    FirebaseAuth fAuth;
+    FirebaseUser fUser;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     @Nullable
@@ -82,6 +87,10 @@ public class CreateEventFragment extends Fragment {
 
     public String createEvent(View view){
         try{
+            fAuth = FirebaseAuth.getInstance();
+            fUser = fAuth.getCurrentUser();
+            userId = fUser.getUid();
+
             event_name = (EditText) view.findViewById(R.id.event_name);
             event_date= (EditText) view.findViewById(R.id.event_date);
             start_time= (EditText) view.findViewById(R.id.start_time);
@@ -116,9 +125,11 @@ public class CreateEventFragment extends Fragment {
             String eventState = event_city.getText().toString().trim();
             String eventZip = event_ZIP.getText().toString().trim();
             String category = categorySpinner.getSelectedItem().toString();
+            String currentUserId = userId;
             System.out.println(category);
             Event event = new Event(eventName, startTime, endTime, eventDate, minParticipants, maxParticipants,
-                minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip, category);
+                minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip, category, currentUserId);
+            System.out.println(currentUserId);
             DatabaseReference myRef = database.getReference("events").push();
             myRef.setValue(event);
         }
