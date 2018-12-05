@@ -47,9 +47,9 @@
             android:text="MEMBERS"/>
 
         <Button
+            android:id="@+id/btn_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="addUserToEvent"
             android:text="Join Event" />
     </LinearLayout>
 

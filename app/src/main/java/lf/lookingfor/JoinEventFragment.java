@@ -48,6 +48,7 @@ public class JoinEventFragment extends Fragment implements SearchView.OnQueryTex
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     Event event = messageSnapshot.getValue(Event.class);
+                    event.setId(messageSnapshot.getKey());
                     events.add(event);
                     adapter.notifyDataSetChanged();
                 }
