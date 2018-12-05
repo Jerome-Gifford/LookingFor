@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new CreateEventFragment();
         }
         else if (id == R.id.nav_myEvents) {
-            //handle action
+            fragment = new MyEventsFragment();
         }
         else if (id == R.id.nav_logout){
             FirebaseAuth.getInstance().signOut();
