@@ -116,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity {
                         FirebaseUser fUser = fAuth.getCurrentUser();
                         String userId = fUser.getUid();
                         DatabaseReference myRef = database.getReference("users");
-                        User newUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+                        User newUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), userId);
                         myRef.child(userId).setValue(newUser);
                         finish();
                         startActivity(new Intent(ProfileActivity.this, MainActivity.class));

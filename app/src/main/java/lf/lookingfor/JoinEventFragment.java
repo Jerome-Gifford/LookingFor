@@ -25,6 +25,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class JoinEventFragment extends Fragment implements SearchView.OnQueryTextListener {
@@ -49,19 +50,9 @@ public class JoinEventFragment extends Fragment implements SearchView.OnQueryTex
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     Event event = messageSnapshot.getValue(Event.class);
-                    if(events.size() > 0){
-                        for(Event currentEvent: events) {
-                            if(!currentEvent.getCurrentUserId().equals(event.getCurrentUserId()) && !currentEvent.getName().equals(event.getName()) && !currentEvent.getDescription().equals(event.getDescription())){
-                                event.setId(messageSnapshot.getKey());
-                                events.add(event);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    } else{
-                        event.setId(messageSnapshot.getKey());
-                        events.add(event);
-                        adapter.notifyDataSetChanged();
-                    }
+                    events.add(event);
+                    event.setId(messageSnapshot.getKey());
+                    adapter.notifyDataSetChanged();
                 }
             }
 

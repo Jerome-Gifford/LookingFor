@@ -35,7 +35,6 @@ public class ViewEventFragment extends Fragment {
         getActivity().setTitle("Event");
         Bundle bundle = getArguments();
         event = bundle.getParcelable("event");
-        System.out.println(myRef);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -60,8 +59,6 @@ public class ViewEventFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     String userId = messageSnapshot.getKey();
-                    System.out.println(userId);
-                    System.out.println(registration.getRegisteredUsers());
                     if(registration.getRegisteredUsers().contains(userId)){
                         users += messageSnapshot.child("displayName").getValue().toString() + ", ";
                         updateMembers();
