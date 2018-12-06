@@ -19,6 +19,7 @@ public class Event implements Parcelable {
     private String eventZip;
     private String category;
     private String currentUserId;
+    private String id;
 
     public Event(){
 
@@ -198,6 +199,15 @@ public class Event implements Parcelable {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     @Override
     public int describeContents() {

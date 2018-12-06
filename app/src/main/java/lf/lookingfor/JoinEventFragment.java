@@ -52,11 +52,13 @@ public class JoinEventFragment extends Fragment implements SearchView.OnQueryTex
                     if(events.size() > 0){
                         for(Event currentEvent: events) {
                             if(!currentEvent.getCurrentUserId().equals(event.getCurrentUserId()) && !currentEvent.getName().equals(event.getName()) && !currentEvent.getDescription().equals(event.getDescription())){
+                                event.setId(messageSnapshot.getKey());
                                 events.add(event);
                                 adapter.notifyDataSetChanged();
                             }
                         }
                     } else{
+                        event.setId(messageSnapshot.getKey());
                         events.add(event);
                         adapter.notifyDataSetChanged();
                     }

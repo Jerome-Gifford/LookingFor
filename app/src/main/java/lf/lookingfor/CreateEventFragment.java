@@ -1,6 +1,7 @@
 package lf.lookingfor;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.cert.TrustAnchor;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateEventFragment extends Fragment {
@@ -129,9 +131,14 @@ public class CreateEventFragment extends Fragment {
             System.out.println(category);
             Event event = new Event(eventName, startTime, endTime, eventDate, minParticipants, maxParticipants,
                 minAge, maxAge, eventDesc, eventAddress, eventCity, eventState, eventZip, category, currentUserId);
-            System.out.println(currentUserId);
+            ArrayList<String> user = new ArrayList<>();
+            user.add(userId);
             DatabaseReference myRef = database.getReference("events").push();
+            DatabaseReference myRegRef = database.getReference("registration").push();
+            String eventId = myRef.getKey();
+            Registration registration = new Registration(minParticipants, maxParticipants, eventId, user);
             myRef.setValue(event);
+            myRegRef.setValue(registration);
         }
         catch (Exception e){
             return "Participants or Age";
