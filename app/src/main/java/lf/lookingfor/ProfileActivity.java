@@ -113,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         DatabaseReference myRef = database.getReference("users").push();
-                        User newUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
+                        User newUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), user.getUid());
                         myRef.setValue(newUser);
                         finish();
                         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
