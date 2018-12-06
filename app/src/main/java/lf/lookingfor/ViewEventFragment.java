@@ -25,13 +25,56 @@ public class ViewEventFragment extends Fragment {
     FirebaseUser fUser;
     FirebaseAuth fAuth;
     String userId;
+    String users = "";
+    final DatabaseReference myRef = database.getReference("registration");
+    String registrationId;
+    TextView eventMembers;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle("Event");
         Bundle bundle = getArguments();
         event = bundle.getParcelable("event");
+        System.out.println(myRef);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    registration = messageSnapshot.getValue(Registration.class);
+                    if(registration.getEventId().equals(event.getId())){
+                        registrationId = messageSnapshot.getKey();
+                        break;
+                    }
+                }
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read has failed");
+            }
+        });
+        final DatabaseReference myRefUsers = database.getReference("users");
+        myRefUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    String userId = messageSnapshot.getKey();
+                    System.out.println(userId);
+                    System.out.println(registration.getRegisteredUsers());
+                    if(registration.getRegisteredUsers().contains(userId)){
+                        users += messageSnapshot.child("displayName").getValue().toString() + ", ";
+                        updateMembers();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read has failed");
+            }
+        });
         return inflater.inflate(R.layout.fragment_view_event, null);
     }
 
@@ -44,7 +87,7 @@ public class ViewEventFragment extends Fragment {
         TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
         TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
         TextView eventCategory = (TextView) mainView.findViewById(R.id.event_category);
-        TextView eventMembers = (TextView) mainView.findViewById(R.id.event_members);
+        eventMembers = (TextView) mainView.findViewById(R.id.event_members);
         Button btn_event = (Button) mainView.findViewById(R.id.btn_event);
         btn_event.setOnClickListener(btnListener);
         eventName.setText(event.getName());
@@ -52,7 +95,9 @@ public class ViewEventFragment extends Fragment {
         eventDesc.setText(event.getDescription());
         eventLoc.setText(event.getEventAddress());
         eventCategory.setText(event.getCategory());
-        eventMembers.setText(Integer.toString(event.getMaxParticipants()));
+        eventMembers.setText(users);
+
+
         Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
 
         if(event.getCurrentUserId().equals(userId)){
@@ -67,30 +112,13 @@ public class ViewEventFragment extends Fragment {
             FirebaseAuth fAuth = FirebaseAuth.getInstance();
             FirebaseUser fUser = fAuth.getCurrentUser();
             final String userId = fUser.getUid();
-            final DatabaseReference myRef = database.getReference("registration");
-            System.out.println(myRef);
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                        System.out.println("Here");
-                        registration = messageSnapshot.getValue(Registration.class);
-                        if(registration.getEventId().equals(event.getId())){
-                            registration.addUser(userId);
-                            myRef.child(messageSnapshot.getKey()).setValue(registration);
-                            System.out.println(registration.getRegisteredUsers());
-                            return;
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    System.out.println("The read has failed");
-                }
-            });
+            registration.addUser(userId);
+            myRef.child(registrationId).setValue(registration);
         }
 
     };
+
+    private void updateMembers(){
+        eventMembers.setText(users);
+    }
 }
