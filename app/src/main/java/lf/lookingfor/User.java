@@ -32,17 +32,20 @@ public class User {
     private String displayName;
     private String userEmail;
     private String userPhoto;
+    private String userId;
 
-    public User(String setName, String setEmail, String setPhoto){
+    public User(String setName, String setEmail, String setPhoto, String setUserId){
         displayName = setName;
         userEmail = setEmail;
         userPhoto = setPhoto;
+        userId = setUserId;
     }
 
     public User () {
         displayName = null;
         userEmail = null;
         userPhoto = null;
+        userId = null;
     }
 
     public void setDisplayName(String setName) {
@@ -57,6 +60,8 @@ public class User {
         userPhoto = setPhoto;
     }
 
+    public void setUserId(String setUserId) { userId = setUserId; }
+
     public String getDisplayName() {
         return displayName;
     }
@@ -68,4 +73,6 @@ public class User {
     public String getUserPhoto() {
         return userPhoto;
     }
+
+    public String getUserId() { return userId; }
 }
