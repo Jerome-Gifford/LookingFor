@@ -47,6 +47,7 @@ public class MyEventsFragment extends Fragment implements SearchView.OnQueryText
     }
 
     public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
+        events.clear();
         DatabaseReference myRef = database.getReference("events");
         fAuth = FirebaseAuth.getInstance();
         fUser = fAuth.getCurrentUser();
@@ -57,9 +58,20 @@ public class MyEventsFragment extends Fragment implements SearchView.OnQueryText
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     Event event = messageSnapshot.getValue(Event.class);
-                    if(event.getCurrentUserId().equals(userId)){
-                        events.add(event);
-                        adapter.notifyDataSetChanged();
+                    if(events.size() > 0){
+                        for(Event currentEvent: events) {
+                            if(!currentEvent.getCurrentUserId().equals(event.getCurrentUserId()) && !currentEvent.getName().equals(event.getName()) && !currentEvent.getDescription().equals(event.getDescription())){
+                                if(event.getCurrentUserId().equals(userId)){
+                                    events.add(event);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    } else{
+                        if(event.getCurrentUserId().equals(userId)){
+                            events.add(event);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 }
             }
