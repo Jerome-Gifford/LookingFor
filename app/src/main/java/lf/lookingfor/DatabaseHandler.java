@@ -66,4 +66,28 @@ public class DatabaseHandler {
 
         return events;
     }
+
+    public Event getEvent(final String eventId){
+        events.clear();
+        final Event[] retEvent = new Event[1];
+        DatabaseReference myRef = database.getReference("events");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    Event event = messageSnapshot.getValue(Event.class);
+                    if(event.getId() == eventId){
+                        retEvent[0] = new Event(event);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read has failed");
+            }
+        });
+
+        return retEvent[0];
+    }
 }

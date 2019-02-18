@@ -51,11 +51,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         events = dbHandler.getAllEvents();
 
         for (Event event: events){
-            LatLng test = getLocationFromAddress(this, event.getEventAddress());
+            LatLng pos = getLocationFromAddress(this, event.getEventAddress());
 
-            googleMap.addMarker(new MarkerOptions().position(test)
-                    .title(event.getName()));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(test));
+            googleMap.addMarker(new MarkerOptions().position(pos)
+                    .title(event.getName() + " Event ID: " + event.getId()));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
         }
 
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

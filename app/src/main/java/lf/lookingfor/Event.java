@@ -25,6 +25,24 @@ public class Event implements Parcelable {
 
     }
 
+    public Event(Event copyEvent){
+        this.name = copyEvent.name;
+        this.startTime = copyEvent.startTime;
+        this.endTime = copyEvent.endTime;
+        this.date = copyEvent.date;
+        this.minParticipants = copyEvent.minParticipants;
+        this.maxParticipants = copyEvent.maxParticipants;
+        this.ageMin = copyEvent.ageMin;
+        this.ageMax = copyEvent.ageMax;
+        this.description = copyEvent.description;
+        this.eventAddress = copyEvent.eventAddress;
+        this.eventCity = copyEvent.eventCity;
+        this.eventState = copyEvent.eventState;
+        this.eventZip = copyEvent.eventZip;
+        this.category = copyEvent.category;
+        this.currentUserId = copyEvent.currentUserId;
+    }
+
     public Event(String name, String startTime, String endTime, String date, int minParticipants,
                  int maxParticipants, int ageMin, int ageMax, String description, String eventAddress,
                  String eventCity, String eventState, String eventZip, String category, String currentUserId) {
