@@ -16,6 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +37,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".MapActivity"></activity>
     </application>
 
 </manifest>

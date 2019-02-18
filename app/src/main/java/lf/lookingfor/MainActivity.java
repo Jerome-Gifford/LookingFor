@@ -112,6 +112,10 @@ public class MainActivity extends AppCompatActivity
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
+        else if (id == R.id.nav_viewMap){
+            finish();
+            startActivity(new Intent(MainActivity.this, MapActivity.class));
+        }
 
         if(fragment != null){
             FragmentManager fragmentManager = getSupportFragmentManager();
