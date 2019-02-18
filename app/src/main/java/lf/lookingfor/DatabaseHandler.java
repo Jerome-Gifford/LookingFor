@@ -1,5 +1,7 @@
 package lf.lookingfor;
 
+import android.widget.ArrayAdapter;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -10,19 +12,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class DatabaseHandler {
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference database = FirebaseDatabase.getInstance().getReference("events");
     ArrayList<Event> events = new ArrayList<>();
 
-    public ArrayList<Event> getAllEvents() {
-        events.clear();
-        DatabaseReference myRef = database.getReference("events");
-        myRef.addValueEventListener(new ValueEventListener() {
+    public DatabaseHandler() {
+        database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                events.clear();
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()){
                     Event event = messageSnapshot.getValue(Event.class);
                     events.add(event);
                 }
+
+                RecyclerAdapter adapter = new RecyclerAdapter(events);
             }
 
             @Override
@@ -30,64 +33,9 @@ public class DatabaseHandler {
                 System.out.println("The read has failed");
             }
         });
-
-        return events;
     }
 
-    public ArrayList<Event> getUserEvents(final FirebaseUser user){
-        events.clear();
-        DatabaseReference myRef = database.getReference("events");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    Event event = messageSnapshot.getValue(Event.class);
-                    if(events.size() > 0){
-                        for(Event currentEvent: events) {
-                            if(!currentEvent.getCurrentUserId().equals(event.getCurrentUserId()) && !currentEvent.getName().equals(event.getName()) && !currentEvent.getDescription().equals(event.getDescription())){
-                                if(event.getCurrentUserId().equals(user.getUid())){
-                                    events.add(event);
-                                }
-                            }
-                        }
-                    } else{
-                        if(event.getCurrentUserId().equals(user.getUid())){
-                            events.add(event);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read has failed");
-            }
-        });
-
+    public ArrayList<Event> getEvents(){
         return events;
-    }
-
-    public Event getEvent(final String eventId){
-        events.clear();
-        final Event[] retEvent = new Event[1];
-        DatabaseReference myRef = database.getReference("events");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    Event event = messageSnapshot.getValue(Event.class);
-                    if(event.getId() == eventId){
-                        retEvent[0] = new Event(event);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read has failed");
-            }
-        });
-
-        return retEvent[0];
     }
 }

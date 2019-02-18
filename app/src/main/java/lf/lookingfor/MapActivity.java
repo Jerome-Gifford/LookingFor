@@ -48,13 +48,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // and move the map's camera to the same location.
 
         events.clear();
-        events = dbHandler.getAllEvents();
+        events = dbHandler.getEvents();
 
         for (Event event: events){
-            LatLng pos = getLocationFromAddress(this, event.getEventAddress());
+            String address = event.getEventAddress() + "," + event.getEventCity() + "," + event.getEventState() + "," + event.getEventZip();
+            LatLng pos = getLocationFromAddress(this, address);
 
             googleMap.addMarker(new MarkerOptions().position(pos)
-                    .title(event.getName() + " Event ID: " + event.getId()));
+                    .title(event.getName()));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
         }
 
