@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +30,7 @@ public class ViewEventFragment extends Fragment {
     String userId;
     String users = "";
     final DatabaseReference myRef = database.getReference("registration");
+    final DatabaseReference myRef2 = database.getReference("events");
     String registrationId;
     TextView eventMembers;
 
@@ -96,11 +100,27 @@ public class ViewEventFragment extends Fragment {
 
 
         Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
+        final Button cancelButton = (Button)mainView.findViewById(R.id.btn_cancel);
 
         if(event.getCurrentUserId().equals(userId)){
             joinButton.setVisibility(View.INVISIBLE);
             joinButton.setClickable(false);
         }
+        else {
+            cancelButton.setVisibility(View.INVISIBLE);
+            cancelButton.setClickable(false);
+        }
+        mainView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                cancelEvent();
+            }
+        });
+    }
+
+    private void cancelEvent() {
+        myRef2.child(registration.getEventId()).removeValue();
+        myRef.child(registrationId).removeValue();
     }
 
     private View.OnClickListener btnListener = new View.OnClickListener() {

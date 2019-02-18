@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -95,6 +96,10 @@ public class MyEventsFragment extends Fragment implements SearchView.OnQueryText
 
     }
 
+    public void cancelEvent(){
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.toolbar_menu, menu);
@@ -121,5 +126,7 @@ public class MyEventsFragment extends Fragment implements SearchView.OnQueryText
         adapter.updateArrayList(newList);
         return true;
     }
+
+
 }
 

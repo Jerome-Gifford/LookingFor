@@ -50,6 +50,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Join Event" />
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel Event" />
     </LinearLayout>
 
 
