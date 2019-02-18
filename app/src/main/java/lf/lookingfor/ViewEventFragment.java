@@ -39,6 +39,30 @@ public class ViewEventFragment extends Fragment {
         getActivity().setTitle("Event");
         Bundle bundle = getArguments();
         event = bundle.getParcelable("event");
+        return inflater.inflate(R.layout.fragment_view_event, null);
+    }
+
+    public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
+        fAuth = FirebaseAuth.getInstance();
+        fUser = fAuth.getCurrentUser();
+        userId = fUser.getUid();
+        final Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
+        final Button cancelButton = (Button)mainView.findViewById(R.id.btn_cancel);
+        TextView eventName = (TextView) mainView.findViewById(R.id.event_title);
+        TextView eventDesc = (TextView) mainView.findViewById(R.id.event_desc);
+        TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
+        TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
+        TextView eventCategory = (TextView) mainView.findViewById(R.id.event_category);
+        final TextView eventParticipants = (TextView) mainView.findViewById(R.id.event_participant_numbers);
+        eventMembers = (TextView) mainView.findViewById(R.id.event_members);
+        Button btn_event = (Button) mainView.findViewById(R.id.btn_event);
+        btn_event.setOnClickListener(btnListener);
+        eventName.setText(event.getName());
+        eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
+        eventDesc.setText(event.getDescription());
+        eventLoc.setText(event.getEventAddress());
+        eventCategory.setText(event.getCategory());
+        eventMembers.setText(users);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -46,6 +70,11 @@ public class ViewEventFragment extends Fragment {
                     registration = messageSnapshot.getValue(Registration.class);
                     if(registration.getEventId().equals(event.getId())){
                         registrationId = messageSnapshot.getKey();
+                        eventParticipants.setText("Number of participants: " + registration.getRegisteredUsers().size() + "/" + registration.getMaximumParticipants());
+                        if(registration.getRegisteredUsers().size() == registration.getMaximumParticipants()){
+                            joinButton.setClickable(false);
+                            joinButton.setText("Event Full");
+                        }
                         break;
                     }
                 }
@@ -57,6 +86,7 @@ public class ViewEventFragment extends Fragment {
                 System.out.println("The read has failed");
             }
         });
+
         final DatabaseReference myRefUsers = database.getReference("users");
         myRefUsers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -76,31 +106,6 @@ public class ViewEventFragment extends Fragment {
                 System.out.println("The read has failed");
             }
         });
-        return inflater.inflate(R.layout.fragment_view_event, null);
-    }
-
-    public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
-        fAuth = FirebaseAuth.getInstance();
-        fUser = fAuth.getCurrentUser();
-        userId = fUser.getUid();
-        TextView eventName = (TextView) mainView.findViewById(R.id.event_title);
-        TextView eventDesc = (TextView) mainView.findViewById(R.id.event_desc);
-        TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
-        TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
-        TextView eventCategory = (TextView) mainView.findViewById(R.id.event_category);
-        eventMembers = (TextView) mainView.findViewById(R.id.event_members);
-        Button btn_event = (Button) mainView.findViewById(R.id.btn_event);
-        btn_event.setOnClickListener(btnListener);
-        eventName.setText(event.getName());
-        eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
-        eventDesc.setText(event.getDescription());
-        eventLoc.setText(event.getEventAddress());
-        eventCategory.setText(event.getCategory());
-        eventMembers.setText(users);
-
-
-        Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
-        final Button cancelButton = (Button)mainView.findViewById(R.id.btn_cancel);
 
         if(event.getCurrentUserId().equals(userId)){
             joinButton.setVisibility(View.INVISIBLE);

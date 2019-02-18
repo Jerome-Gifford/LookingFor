@@ -41,6 +41,11 @@
             android:layout_height="wrap_content"
             android:text="CATEGORY"/>
         <TextView
+            android:id="@+id/event_participant_numbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PARTICIPANTS"/>
+        <TextView
             android:id="@+id/event_members"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
