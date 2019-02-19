@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +30,7 @@ public class ViewEventFragment extends Fragment {
     String userId;
     String users = "";
     final DatabaseReference myRef = database.getReference("registration");
+    final DatabaseReference myRef2 = database.getReference("events");
     String registrationId;
     TextView eventMembers;
 
@@ -35,6 +39,30 @@ public class ViewEventFragment extends Fragment {
         getActivity().setTitle("Event");
         Bundle bundle = getArguments();
         event = bundle.getParcelable("event");
+        return inflater.inflate(R.layout.fragment_view_event, null);
+    }
+
+    public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
+        fAuth = FirebaseAuth.getInstance();
+        fUser = fAuth.getCurrentUser();
+        userId = fUser.getUid();
+        final Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
+        final Button cancelButton = (Button)mainView.findViewById(R.id.btn_cancel);
+        TextView eventName = (TextView) mainView.findViewById(R.id.event_title);
+        TextView eventDesc = (TextView) mainView.findViewById(R.id.event_desc);
+        TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
+        TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
+        TextView eventCategory = (TextView) mainView.findViewById(R.id.event_category);
+        final TextView eventParticipants = (TextView) mainView.findViewById(R.id.event_participant_numbers);
+        eventMembers = (TextView) mainView.findViewById(R.id.event_members);
+        Button btn_event = (Button) mainView.findViewById(R.id.btn_event);
+        btn_event.setOnClickListener(btnListener);
+        eventName.setText(event.getName());
+        eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
+        eventDesc.setText(event.getDescription());
+        eventLoc.setText(event.getEventAddress());
+        eventCategory.setText(event.getCategory());
+        eventMembers.setText(users);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -42,6 +70,11 @@ public class ViewEventFragment extends Fragment {
                     registration = messageSnapshot.getValue(Registration.class);
                     if(registration.getEventId().equals(event.getId())){
                         registrationId = messageSnapshot.getKey();
+                        eventParticipants.setText("Number of participants: " + registration.getRegisteredUsers().size() + "/" + registration.getMaximumParticipants());
+                        if(registration.getRegisteredUsers().size() == registration.getMaximumParticipants()){
+                            joinButton.setClickable(false);
+                            joinButton.setText("Event Full");
+                        }
                         break;
                     }
                 }
@@ -53,6 +86,7 @@ public class ViewEventFragment extends Fragment {
                 System.out.println("The read has failed");
             }
         });
+
         final DatabaseReference myRefUsers = database.getReference("users");
         myRefUsers.addValueEventListener(new ValueEventListener() {
             @Override
@@ -72,35 +106,26 @@ public class ViewEventFragment extends Fragment {
                 System.out.println("The read has failed");
             }
         });
-        return inflater.inflate(R.layout.fragment_view_event, null);
-    }
-
-    public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
-        fAuth = FirebaseAuth.getInstance();
-        fUser = fAuth.getCurrentUser();
-        userId = fUser.getUid();
-        TextView eventName = (TextView) mainView.findViewById(R.id.event_title);
-        TextView eventDesc = (TextView) mainView.findViewById(R.id.event_desc);
-        TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
-        TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
-        TextView eventCategory = (TextView) mainView.findViewById(R.id.event_category);
-        eventMembers = (TextView) mainView.findViewById(R.id.event_members);
-        Button btn_event = (Button) mainView.findViewById(R.id.btn_event);
-        btn_event.setOnClickListener(btnListener);
-        eventName.setText(event.getName());
-        eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
-        eventDesc.setText(event.getDescription());
-        eventLoc.setText(event.getEventAddress());
-        eventCategory.setText(event.getCategory());
-        eventMembers.setText(users);
-
-
-        Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
 
         if(event.getCurrentUserId().equals(userId)){
             joinButton.setVisibility(View.INVISIBLE);
             joinButton.setClickable(false);
         }
+        else {
+            cancelButton.setVisibility(View.INVISIBLE);
+            cancelButton.setClickable(false);
+        }
+        mainView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                cancelEvent();
+            }
+        });
+    }
+
+    private void cancelEvent() {
+        myRef2.child(registration.getEventId()).removeValue();
+        myRef.child(registrationId).removeValue();
     }
 
     private View.OnClickListener btnListener = new View.OnClickListener() {
