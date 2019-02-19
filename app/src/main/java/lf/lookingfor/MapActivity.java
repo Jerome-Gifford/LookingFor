@@ -1,6 +1,7 @@
 package lf.lookingfor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -13,13 +14,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +23,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     DatabaseHandler dbHandler = new DatabaseHandler();
     ArrayList<Event> events = new ArrayList<>();
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        startActivity(new Intent(MapActivity.this, MainActivity.class));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +56,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LatLng pos = getLocationFromAddress(this, address);
 
             googleMap.addMarker(new MarkerOptions().position(pos)
-                    .title(event.getName()));
+                    .title(event.getName()).snippet(event.getDescription() + " - Event ID: " + event.getId()));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
         }
 
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
-                System.out.println("Add event join here");
-                return false;
+            public void onInfoWindowClick(Marker marker) {
+                finish();
+                startActivity(new Intent(MapActivity.this, MapEventActivity.class));
             }
         });
+
+        //googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        //    @Override
+        //    public boolean onMarkerClick(Marker marker) {
+        //        finish();
+        //        startActivity(new Intent(MapActivity.this, MapEventActivity.class));
+        //        return false;
+        //    }
+        //});
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {

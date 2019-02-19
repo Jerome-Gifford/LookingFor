@@ -38,6 +38,7 @@
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".SignupActivity"></activity>
         <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapEventActivity"></activity>
     </application>
 
 </manifest>
