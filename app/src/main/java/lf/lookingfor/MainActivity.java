@@ -48,6 +48,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        fbAuth = FirebaseAuth.getInstance();
+        if(fbAuth.getCurrentUser() == null){
+            finish();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }else{
+            user.setDisplayName(fbAuth.getCurrentUser().getDisplayName());
+            user.setUserEmail(fbAuth.getCurrentUser().getEmail());
+            user.setUserPhoto(fbAuth.getCurrentUser().getPhotoUrl().toString());
+        }
+    }
+
+    @Override
     public void onStart(){
         super.onStart();
         if(fbAuth.getCurrentUser() == null){
@@ -111,6 +125,10 @@ public class MainActivity extends AppCompatActivity
             FirebaseAuth.getInstance().signOut();
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }
+        else if (id == R.id.nav_viewMap){
+            finish();
+            startActivity(new Intent(MainActivity.this, MapActivity.class));
         }
 
         if(fragment != null){

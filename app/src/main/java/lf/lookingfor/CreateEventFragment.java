@@ -136,6 +136,7 @@ public class CreateEventFragment extends Fragment {
             DatabaseReference myRef = database.getReference("events").push();
             DatabaseReference myRegRef = database.getReference("registration").push();
             String eventId = myRef.getKey();
+            event.setId(eventId);
             Registration registration = new Registration(minParticipants, maxParticipants, eventId, user);
             myRef.setValue(event);
             myRegRef.setValue(registration);
