@@ -17,12 +17,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     DatabaseHandler dbHandler = new DatabaseHandler();
     ArrayList<Event> events = new ArrayList<>();
+    HashMap<MarkerOptions, Event> eventMap = new HashMap<>();
 
     @Override
     public void onBackPressed() {
@@ -51,13 +53,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         events.clear();
         events = dbHandler.getEvents();
 
+        googleMap.setMaxZoomPreference(googleMap.getMaxZoomLevel());
+
         for (Event event: events){
             String address = event.getEventAddress() + "," + event.getEventCity() + "," + event.getEventState() + "," + event.getEventZip();
             LatLng pos = getLocationFromAddress(this, address);
 
-            googleMap.addMarker(new MarkerOptions().position(pos)
-                    .title(event.getName()).snippet(event.getDescription() + " - Event ID: " + event.getId()));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15.0f));
+
+            MarkerOptions markerOptions = new MarkerOptions().position(pos)
+                    .title(event.getName()).snippet(event.getDescription());
+
+            eventMap.put(markerOptions, event);
+            googleMap.addMarker(markerOptions);
         }
 
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
