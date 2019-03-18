@@ -34,19 +34,14 @@ public class User {
     private String userPhoto;
     private String userId;
 
-    public User(String setName, String setEmail, String setPhoto, String setUserId){
+    public User(String setName, String setEmail, String setUserId, String setPhoto){
         displayName = setName;
         userEmail = setEmail;
         userPhoto = setPhoto;
         userId = setUserId;
     }
 
-    public User () {
-        displayName = null;
-        userEmail = null;
-        userPhoto = null;
-        userId = null;
-    }
+    public User () {}
 
     public void setDisplayName(String setName) {
         displayName = setName;

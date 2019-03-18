@@ -41,9 +41,9 @@ public class ProfileActivity extends AppCompatActivity {
     ProgressBar progressBar;
     String profileImageUrl;
 
-    FirebaseAuth mAuth;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    FirebaseUser user;
+    FirebaseUser user = mAuth.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         editText = findViewById(R.id.display_name);
         imageView = findViewById(R.id.imageView);
-
-        mAuth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.progress_bar);
 
@@ -75,7 +73,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserInfo() {
-        FirebaseUser user = mAuth.getCurrentUser();
 
         if(user != null){
             if(user.getPhotoUrl() != null){
@@ -100,8 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        user = mAuth.getCurrentUser();
-
         if(user != null && profileImageUrl != null){
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(displayName)
@@ -112,12 +107,9 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
-                        FirebaseAuth fAuth = FirebaseAuth.getInstance();
-                        FirebaseUser fUser = fAuth.getCurrentUser();
-                        String userId = fUser.getUid();
-                        DatabaseReference myRef = database.getReference("users");
-                        User newUser = new User(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString(), userId);
-                        myRef.child(userId).setValue(newUser);
+                        DatabaseReference myRef = database.getReference();
+                        User newUser = new User(user.getDisplayName(), user.getEmail(), user.getUid(), user.getPhotoUrl().toString());
+                        myRef.child("users").child(user.getUid()).setValue(newUser);
                         finish();
                         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                     }
@@ -129,8 +121,6 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
 
         if(requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null){
             uriProfileImage = data.getData();
@@ -146,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFirebaseStorage() {
-        final StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis() + ".jpg");
+        final StorageReference profileImageReference = FirebaseStorage.getInstance().getReference("profilepics/" + user.getUid() + ".jpg");
         if(uriProfileImage != null){
             progressBar.setVisibility(View.VISIBLE);
             profileImageReference.putFile(uriProfileImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

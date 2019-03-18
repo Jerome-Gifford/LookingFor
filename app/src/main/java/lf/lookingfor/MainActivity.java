@@ -1,7 +1,11 @@
 package lf.lookingfor;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,16 +17,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FirebaseAuth fbAuth;
+    FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
     NavigationView navigationView;
-    ImageView iView;
+    View headerView;
+    ImageView proPic;
     TextView nView;
     TextView eView;
     String profileImageUrl;
@@ -32,46 +49,161 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(fbUser == null){
+            finish();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        }else{
+            user.setDisplayName(fbUser.getDisplayName());
+            user.setUserEmail(fbUser.getEmail());
+            user.setUserPhoto(fbUser.getPhotoUrl().toString());
+            user.setUserId(fbUser.getUid());
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fbAuth = FirebaseAuth.getInstance();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+
+        proPic = headerView.findViewById(R.id.imageView);
+        TextView name = headerView.findViewById(R.id.nameView);
+        TextView email = headerView.findViewById(R.id.emailView);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference picRef = storageRef.child("profilepics/" + user.getUserId() + ".jpg");
+
+        try {
+            final File localFile = File.createTempFile("images", ".jpg");
+            picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Glide.with(headerView.getContext())
+                            .load(localFile)
+                            .into(proPic);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        proPic.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        fbAuth = FirebaseAuth.getInstance();
-        if(fbAuth.getCurrentUser() == null){
+
+        navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+
+        proPic = headerView.findViewById(R.id.imageView);
+        TextView name = headerView.findViewById(R.id.nameView);
+        TextView email = headerView.findViewById(R.id.emailView);
+
+        fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(fbUser == null){
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }else{
-            user.setDisplayName(fbAuth.getCurrentUser().getDisplayName());
-            user.setUserEmail(fbAuth.getCurrentUser().getEmail());
-            user.setUserPhoto(fbAuth.getCurrentUser().getPhotoUrl().toString());
+            user.setDisplayName(fbUser.getDisplayName());
+            user.setUserEmail(fbUser.getEmail());
+            user.setUserPhoto(fbUser.getPhotoUrl().toString());
+            user.setUserId(fbUser.getUid());
         }
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference picRef = storageRef.child("profilepics/ " + user.getUserId() + ".jpg");
+
+        try {
+            final File localFile = File.createTempFile("images", ".jpg");
+            picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Glide.with(headerView.getContext())
+                            .load(localFile)
+                            .into(proPic);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        proPic.setVisibility(View.VISIBLE);
+
+        name.setText(user.getDisplayName());
+        email.setText(user.getUserEmail());
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        if(fbAuth.getCurrentUser() == null){
+        fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(fbUser == null){
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }else{
-            user.setDisplayName(fbAuth.getCurrentUser().getDisplayName());
-            user.setUserEmail(fbAuth.getCurrentUser().getEmail());
-            user.setUserPhoto(fbAuth.getCurrentUser().getPhotoUrl().toString());
+            user.setDisplayName(fbUser.getDisplayName());
+            user.setUserEmail(fbUser.getEmail());
+            user.setUserPhoto(fbUser.getPhotoUrl().toString());
+            user.setUserId(fbUser.getUid());
         }
+
+        navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+
+        proPic = headerView.findViewById(R.id.imageView);
+        TextView name = headerView.findViewById(R.id.nameView);
+        TextView email = headerView.findViewById(R.id.emailView);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference picRef = storageRef.child("profilepics/ " + user.getUserId() + ".jpg");
+
+        try {
+            final File localFile = File.createTempFile("images", ".jpg");
+            picRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Glide.with(headerView.getContext())
+                            .load(localFile)
+                            .into(proPic);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        proPic.setVisibility(View.VISIBLE);
+
+        name.setText(user.getDisplayName());
+        email.setText(user.getUserEmail());
     }
 
     @Override
