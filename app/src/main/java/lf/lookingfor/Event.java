@@ -78,6 +78,7 @@ public class Event implements Parcelable {
         eventState = in.readString();
         eventZip = in.readString();
         category = in.readString();
+        currentUserId = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -248,5 +249,6 @@ public class Event implements Parcelable {
         dest.writeString(this.eventState);
         dest.writeString(this.eventZip);
         dest.writeString(this.category);
+        dest.writeString(this.currentUserId);
     }
 }

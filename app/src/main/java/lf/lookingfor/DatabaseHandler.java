@@ -38,4 +38,13 @@ public class DatabaseHandler {
     public ArrayList<Event> getEvents(){
         return events;
     }
+
+    public Event getEvent(String eventId){
+        for (Event event: events) {
+            if(event.getId().equals(eventId)){
+                return event;
+            }
+        }
+        return null;
+    }
 }
