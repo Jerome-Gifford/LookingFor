@@ -11,14 +11,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Event Search Radius:"/>
+        android:text="Your Event Search Radius (Meters):" />
 
     <EditText
+        android:id="@+id/radiusEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter event search radius in meters"
-        android:id="@+id/radiusEdit"
-        android:inputType="number" />
+        android:inputType="number"
+        android:text="1000" />
 
     <Space
         android:layout_width="match_parent"

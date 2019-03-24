@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     FirebaseStorage storage = FirebaseStorage.getInstance();
     NavigationView navigationView;
     View headerView;
+    int mapRadius = 1000;
     EditText radiusEdit;
     ImageView proPic;
     TextView nView;
@@ -281,8 +282,11 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         else if (id == R.id.nav_viewMap){
+            mapRadius = Integer.parseInt(radiusEdit.getText().toString());
             finish();
-            startActivity(new Intent(MainActivity.this, MapActivity.class));
+            Intent intent = new Intent(MainActivity.this, MapActivity.class);
+            intent.putExtra("MAP_RADIUS", mapRadius);
+            startActivity(intent);
         }
 
         if(fragment != null){

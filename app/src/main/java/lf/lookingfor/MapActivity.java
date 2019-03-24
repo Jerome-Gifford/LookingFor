@@ -37,6 +37,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     DatabaseHandler dbHandler = new DatabaseHandler();
     ArrayList<Event> events = new ArrayList<>();
     HashMap<MarkerOptions, Event> eventMap = new HashMap<>();
+    int mapRadius = 1000;
     LocationManager locationManager;
     Location lastKnownLocation;
 
@@ -120,6 +121,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_map);
+        Intent intent = getIntent();
+        mapRadius = intent.getIntExtra("MAP_RADIUS", 1000);
         getLocationPermission();
     }
 
@@ -151,7 +154,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LatLng eventPos = markerOptions.getPosition();
             LatLng currPos = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
 
-            if(SphericalUtil.computeDistanceBetween(eventPos, currPos) < 5000){
+            if(SphericalUtil.computeDistanceBetween(eventPos, currPos) < mapRadius){
                 googleMap.addMarker(markerOptions);
                 eventMap.put(markerOptions, event);
             }
