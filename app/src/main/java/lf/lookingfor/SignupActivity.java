@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -96,6 +97,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 finish();
                 startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                 break;
+
         }
     }
 }
