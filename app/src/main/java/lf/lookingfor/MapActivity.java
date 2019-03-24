@@ -70,14 +70,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     .title(event.getName()).snippet(event.getDescription());
 
             eventMap.put(markerOptions, event);
-            googleMap.addMarker(markerOptions);
+            Marker marker = googleMap.addMarker(markerOptions);
+            marker.setTag(event);
         }
 
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 finish();
-                startActivity(new Intent(MapActivity.this, MapEventActivity.class));
+                Event event = (Event)marker.getTag();
+                Intent intent = new Intent(MapActivity.this, MapEventActivity.class);
+                intent.putExtra("event", event);
+                startActivity(intent);
             }
         });
 
