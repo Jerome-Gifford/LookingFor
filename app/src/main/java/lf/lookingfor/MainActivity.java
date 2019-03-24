@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("Looking For");
+
         if(fbUser == null){
             finish();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

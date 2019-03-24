@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class ViewEventFragment extends Fragment {
         final Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
         final Button cancelButton = (Button)mainView.findViewById(R.id.btn_cancel);
         TextView eventName = (TextView) mainView.findViewById(R.id.event_title);
+        TextView eventDate = (TextView) mainView.findViewById(R.id.event_date);
         TextView eventDesc = (TextView) mainView.findViewById(R.id.event_desc);
         TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
         TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
@@ -61,6 +63,7 @@ public class ViewEventFragment extends Fragment {
         eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
         eventDesc.setText(event.getDescription());
         eventLoc.setText(event.getEventAddress());
+        eventDate.setText(event.getDate());
         eventCategory.setText(event.getCategory());
         eventMembers.setText(users);
         myRef.addValueEventListener(new ValueEventListener() {
