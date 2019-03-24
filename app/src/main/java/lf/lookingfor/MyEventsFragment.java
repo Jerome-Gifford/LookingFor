@@ -126,7 +126,5 @@ public class MyEventsFragment extends Fragment implements SearchView.OnQueryText
         adapter.updateArrayList(newList);
         return true;
     }
-
-
 }
 

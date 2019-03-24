@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,9 +16,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.FrameStats;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     FirebaseStorage storage = FirebaseStorage.getInstance();
     NavigationView navigationView;
     View headerView;
+    EditText radiusEdit;
     ImageView proPic;
     TextView nView;
     TextView eView;
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        radiusEdit = (EditText) findViewById(R.id.radiusEdit);
         navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -105,12 +111,22 @@ public class MainActivity extends AppCompatActivity
         }
 
         proPic.setVisibility(View.VISIBLE);
+
+        Fragment fragment = new HomeFragment();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        ft.replace(R.id.screen_area, fragment);
+
+        ft.commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        radiusEdit = (EditText) findViewById(R.id.radiusEdit);
         navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
         headerView = navigationView.getHeaderView(0);
 
@@ -171,7 +187,7 @@ public class MainActivity extends AppCompatActivity
             user.setUserPhoto(fbUser.getPhotoUrl().toString());
             user.setUserId(fbUser.getUid());
         }
-
+        radiusEdit = (EditText) findViewById(R.id.radiusEdit);
         navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
         headerView = navigationView.getHeaderView(0);
 
@@ -247,9 +263,13 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         int id = item.getItemId();
 
-        if (id == R.id.nav_findEvent) {
+        if (id == R.id.nav_home){
+            fragment = new HomeFragment();
+        }
+        else if (id == R.id.nav_findEvent) {
             fragment = new JoinEventFragment();
-        } else if (id == R.id.nav_createEvent) {
+        }
+        else if (id == R.id.nav_createEvent) {
             fragment = new CreateEventFragment();
         }
         else if (id == R.id.nav_myEvents) {
