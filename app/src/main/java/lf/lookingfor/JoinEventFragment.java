@@ -93,7 +93,8 @@ public class JoinEventFragment extends Fragment implements SearchView.OnQueryTex
         ArrayList<Event> newList = new ArrayList<>();
 
         for (Event e : events){
-            if(e.getName().toLowerCase().contains(userInput) || e.getDescription().toLowerCase().contains(userInput)){
+            if(e.getName().toLowerCase().contains(userInput) || e.getDescription().toLowerCase().contains(userInput) ||
+                    e.getCategory().toLowerCase().contains(userInput)){
                 newList.add(e);
             }
         }

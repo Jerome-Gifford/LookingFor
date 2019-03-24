@@ -29,12 +29,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public int currentItem;
         public TextView itemTitle;
         public TextView itemDetail;
+        public TextView itemCategory;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemTitle = (TextView)itemView.findViewById(R.id.item_title);
             itemDetail =
                     (TextView)itemView.findViewById(R.id.item_detail);
+            itemCategory =
+                    (TextView)itemView.findViewById(R.id.item_category);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -64,6 +67,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.itemTitle.setText(events.get(i).getName());
         viewHolder.itemDetail.setText(events.get(i).getDescription());
+        viewHolder.itemCategory.setText(events.get(i).getCategory());
     }
 
     @Override
