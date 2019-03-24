@@ -41,6 +41,7 @@ public class Event implements Parcelable {
         this.eventZip = copyEvent.eventZip;
         this.category = copyEvent.category;
         this.currentUserId = copyEvent.currentUserId;
+        this.id = copyEvent.id;
     }
 
     public Event(String name, String startTime, String endTime, String date, int minParticipants,
@@ -79,6 +80,7 @@ public class Event implements Parcelable {
         eventZip = in.readString();
         category = in.readString();
         currentUserId = in.readString();
+        id = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -250,5 +252,6 @@ public class Event implements Parcelable {
         dest.writeString(this.eventZip);
         dest.writeString(this.category);
         dest.writeString(this.currentUserId);
+        dest.writeString(this.id);
     }
 }
