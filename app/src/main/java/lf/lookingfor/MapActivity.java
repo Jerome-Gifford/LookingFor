@@ -155,8 +155,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LatLng currPos = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
 
             if(SphericalUtil.computeDistanceBetween(eventPos, currPos) < mapRadius){
-                googleMap.addMarker(markerOptions);
+                Marker marker = googleMap.addMarker(markerOptions);
                 eventMap.put(markerOptions, event);
+                marker.setTag(event);
             }
         }
 
