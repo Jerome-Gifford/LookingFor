@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class User {
+public class User implements Parcelable {
     private String displayName;
     private String userEmail;
     private String userPhoto;
@@ -42,6 +44,25 @@ public class User {
     }
 
     public User () {}
+
+    protected User(Parcel in) {
+        displayName = in.readString();
+        userEmail = in.readString();
+        userPhoto = in.readString();
+        userId = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public void setDisplayName(String setName) {
         displayName = setName;
@@ -70,4 +91,17 @@ public class User {
     }
 
     public String getUserId() { return userId; }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.displayName);
+        dest.writeString(this.userEmail);
+        dest.writeString(this.userPhoto);
+        dest.writeString(this.userId);
+    }
 }

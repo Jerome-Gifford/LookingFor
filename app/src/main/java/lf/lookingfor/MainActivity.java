@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -281,6 +282,12 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_myEvents) {
             fragment = new MyEventsFragment();
+        }
+        else if (id == R.id.nav_profile) {
+            fragment = new ProfileFragment();
+        }
+        else if (id == R.id.nav_users) {
+            fragment = new SelectUserFragment();
         }
         else if (id == R.id.nav_logout){
             FirebaseAuth.getInstance().signOut();
