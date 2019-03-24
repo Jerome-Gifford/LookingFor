@@ -36,6 +36,10 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_send"
             android:title="Log out" />
+        <item
+            android:id="@+id/nav_users"
+            android:icon="@drawable/ic_my_profile"
+            android:title="Users" />
     </group>
 
 </menu>

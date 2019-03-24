@@ -110,6 +110,8 @@ public class ProfileActivity extends AppCompatActivity {
                         DatabaseReference myRef = database.getReference();
                         User newUser = new User(user.getDisplayName(), user.getEmail(), user.getUid(), user.getPhotoUrl().toString());
                         myRef.child("users").child(user.getUid()).setValue(newUser);
+                        UserRating rating = new UserRating(user.getUid());
+                        myRef.child("ratings").child(user.getUid()).setValue(rating);
                         finish();
                         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
                     }
