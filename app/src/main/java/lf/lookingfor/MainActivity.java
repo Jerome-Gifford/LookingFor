@@ -16,6 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.FrameStats;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         radiusEdit = (EditText) findViewById(R.id.radiusEdit);
+
         navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -189,6 +194,7 @@ public class MainActivity extends AppCompatActivity
             user.setUserId(fbUser.getUid());
         }
         radiusEdit = (EditText) findViewById(R.id.radiusEdit);
+
         navigationView = (NavigationView) findViewById(R.id.drawer_layout).findViewById(R.id.nav_view);
         headerView = navigationView.getHeaderView(0);
 
@@ -282,7 +288,25 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         else if (id == R.id.nav_viewMap){
-            mapRadius = Integer.parseInt(radiusEdit.getText().toString());
+            int rad;
+            try {
+                rad = Integer.parseInt(radiusEdit.getText().toString());
+                mapRadius = rad;
+                if( rad < 10 || rad > 99999){
+                    radiusEdit.setFocusable(View.FOCUSABLE);
+                    Toast.makeText(MainActivity.this, "Enter a search radius between 10 and 99999 meters.", Toast.LENGTH_SHORT).show();
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                    return false;
+                }
+            } catch (Exception e){
+                radiusEdit.setFocusable(View.FOCUSABLE);
+                Toast.makeText(MainActivity.this, "Enter a search radius between 10 and 99999 meters.", Toast.LENGTH_SHORT).show();
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                return false;
+            }
+
             finish();
             Intent intent = new Intent(MainActivity.this, MapActivity.class);
             intent.putExtra("MAP_RADIUS", mapRadius);
