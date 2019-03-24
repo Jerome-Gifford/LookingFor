@@ -40,6 +40,7 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
