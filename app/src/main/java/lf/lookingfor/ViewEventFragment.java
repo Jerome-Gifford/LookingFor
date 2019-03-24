@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class ViewEventFragment extends Fragment {
         final Button joinButton = (Button)mainView.findViewById(R.id.btn_event);
         final Button cancelButton = (Button)mainView.findViewById(R.id.btn_cancel);
         TextView eventName = (TextView) mainView.findViewById(R.id.event_title);
+        TextView eventDate = (TextView) mainView.findViewById(R.id.event_date);
         TextView eventDesc = (TextView) mainView.findViewById(R.id.event_desc);
         TextView eventTime = (TextView) mainView.findViewById(R.id.event_time);
         TextView eventLoc = (TextView) mainView.findViewById(R.id.event_location);
@@ -58,10 +60,11 @@ public class ViewEventFragment extends Fragment {
         Button btn_event = (Button) mainView.findViewById(R.id.btn_event);
         btn_event.setOnClickListener(btnListener);
         eventName.setText(event.getName());
-        eventTime.setText(event.getStartTime() + " - " + event.getEndTime());
-        eventDesc.setText(event.getDescription());
-        eventLoc.setText(event.getEventAddress());
-        eventCategory.setText(event.getCategory());
+        eventTime.setText("Time: " + event.getStartTime() + " - " + event.getEndTime() + "\n");
+        eventDesc.setText("\nDescription: "+ event.getDescription() + "\n");
+        eventLoc.setText("Location: " + event.getEventAddress() + "\n");
+        eventDate.setText("Date: " + event.getDate() + "\n");
+        eventCategory.setText("Category: " + event.getCategory() + "\n");
         eventMembers.setText(users);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -70,7 +73,7 @@ public class ViewEventFragment extends Fragment {
                     registration = messageSnapshot.getValue(Registration.class);
                     if(registration.getEventId().equals(event.getId())){
                         registrationId = messageSnapshot.getKey();
-                        eventParticipants.setText("Number of participants: " + registration.getRegisteredUsers().size() + "/" + registration.getMaximumParticipants());
+                        eventParticipants.setText("Number of participants: " + registration.getRegisteredUsers().size() + "/" + registration.getMaximumParticipants() + "\n");
                         if(registration.getRegisteredUsers().size() == registration.getMaximumParticipants()){
                             joinButton.setClickable(false);
                             joinButton.setText("Event Full");
