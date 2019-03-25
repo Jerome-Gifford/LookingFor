@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -73,7 +74,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                     finish();
-                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                    startActivity(new Intent(SignupActivity.this, ProfileActivity.class));
                 }else{
                     if(task.getException() instanceof FirebaseAuthUserCollisionException){
                         Toast.makeText(getApplicationContext(), "User registration unsuccessful. Email is already registered.", Toast.LENGTH_SHORT).show();
@@ -96,6 +97,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 finish();
                 startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                 break;
+
         }
     }
 }
