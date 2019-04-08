@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     String profileImageUrl;
     User user = new User();
     MyFirebaseInstanceIDService instanceIDService = new MyFirebaseInstanceIDService();
+    MyFirebaseMessagingService messagingService = new MyFirebaseMessagingService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
