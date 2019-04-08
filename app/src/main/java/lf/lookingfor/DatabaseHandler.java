@@ -12,11 +12,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class DatabaseHandler {
-    DatabaseReference database = FirebaseDatabase.getInstance().getReference("events");
+    DatabaseReference databaseEvents = FirebaseDatabase.getInstance().getReference("events");
+    DatabaseReference databaseUsers = FirebaseDatabase.getInstance().getReference("users");
     ArrayList<Event> events = new ArrayList<>();
+    ArrayList<User> users = new ArrayList<>();
 
     public DatabaseHandler() {
-        database.addValueEventListener(new ValueEventListener() {
+        databaseEvents.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 events.clear();
@@ -33,16 +35,43 @@ public class DatabaseHandler {
                 System.out.println("The read has failed");
             }
         });
+
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                users.clear();
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()){
+                    User user = messageSnapshot.getValue(User.class);
+                    users.add(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read has failed");
+            }
+        });
     }
 
     public ArrayList<Event> getEvents(){
         return events;
     }
 
+    public ArrayList<User> getUsers() { return users; }
+
     public Event getEvent(String eventId){
         for (Event event: events) {
             if(event.getId().equals(eventId)){
                 return event;
+            }
+        }
+        return null;
+    }
+
+    public User getUser(String userID){
+        for(User user:users){
+            if(userID.equals(user.getUserId())){
+                return user;
             }
         }
         return null;
