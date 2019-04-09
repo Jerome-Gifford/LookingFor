@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class ViewGroupsFragment extends Fragment {
     UserGroup group;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     ArrayList<String> members = new ArrayList<>();
+    User user;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,16 +43,26 @@ public class ViewGroupsFragment extends Fragment {
         TextView groupName = (TextView) mainView.findViewById(R.id.group_name);
         final TextView groupDesc = (TextView) mainView.findViewById(R.id.group_description);
         final ListView memberView = (ListView) mainView.findViewById(R.id.group_members);
+        final Button button = (Button) mainView.findViewById(R.id.btn_join);
         groupName.setText(group.getGroupName());
         groupDesc.setText(group.getDescription());
         DatabaseReference myRef = database.getReference("users");
         final ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                FirebaseAuth fAuth = FirebaseAuth.getInstance();
+                FirebaseUser fUser = fAuth.getCurrentUser();
+                String userId = fUser.getUid();
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     ArrayList<User> groupMembers = group.getMembers();
+                    if(messageSnapshot.getKey().equals(userId)){
+                        user = messageSnapshot.getValue(User.class);
+                    }
                     for(User u: groupMembers){
                         if(u.getUserId().equals(messageSnapshot.getKey())) {
+                            if(u.getUserId().equals(userId)){
+                                button.setVisibility(View.INVISIBLE);
+                            }
                             members.add(u.getDisplayName());
                             ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, members);
                             memberView.setAdapter(adapter);
@@ -69,22 +81,11 @@ public class ViewGroupsFragment extends Fragment {
         mainView.findViewById(R.id.btn_join).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                FirebaseAuth fAuth = FirebaseAuth.getInstance();
-                FirebaseUser fUser = fAuth.getCurrentUser();
-                String userId = fUser.getUid();
-                User checkUser = new User();
-                checkUser.setUserId(userId);
-                if(group.eligibleToJoin(checkUser)){
-                    group.joinGroup();
-                }
+                group.joinGroup(user);
+                DatabaseReference myRef = database.getReference();
+                myRef.child("groups").child(group.getGroupId()).setValue(group);
+                button.setVisibility(View.INVISIBLE);
             }
         });
     }
-
-    /*private void rateUser(RatingBar user_rating){
-        float ratingValue = user_rating.getRating();
-        rating.rate(new Rating(FirebaseAuth.getInstance().getCurrentUser().getUid(), ratingValue));
-        DatabaseReference myRef = database.getReference();
-        myRef.child("ratings").child(user.getUserId()).setValue(rating);
-    }*/
 }

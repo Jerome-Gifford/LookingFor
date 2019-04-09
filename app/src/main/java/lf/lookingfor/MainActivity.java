@@ -292,12 +292,10 @@ public class MainActivity extends AppCompatActivity
             fragment = new SelectUserFragment();
         }
         else if (id == R.id.nav_groups) {
-            UserGroup test = new UserGroup("Name", "Test");
-            test.joinGroup(user);
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("groups").push();
-            myRef.setValue(test);
             fragment = new SelectGroupFragment();
+        }
+        else if (id == R.id.nav_create_group) {
+            fragment = new CreateGroupFragment();
         }
         else if (id == R.id.nav_logout){
             FirebaseAuth.getInstance().signOut();

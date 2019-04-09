@@ -9,6 +9,7 @@ public class UserGroup implements Parcelable {
     private String groupName;
     private String description;
     private ArrayList<User> members = new ArrayList<>();
+    private String groupId;
 
     public UserGroup() {
     }
@@ -71,6 +72,14 @@ public class UserGroup implements Parcelable {
 
     public void setMembers(ArrayList<User> members) {
         this.members = members;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     @Override
