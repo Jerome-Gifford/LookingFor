@@ -34,6 +34,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -288,6 +290,14 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_users) {
             fragment = new SelectUserFragment();
+        }
+        else if (id == R.id.nav_groups) {
+            UserGroup test = new UserGroup("Name", "Test");
+            test.joinGroup(user);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("groups").push();
+            myRef.setValue(test);
+            fragment = new SelectGroupFragment();
         }
         else if (id == R.id.nav_logout){
             FirebaseAuth.getInstance().signOut();
