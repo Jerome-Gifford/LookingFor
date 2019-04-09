@@ -40,6 +40,14 @@
             android:id="@+id/nav_users"
             android:icon="@drawable/ic_my_profile"
             android:title="Users" />
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_my_profile"
+            android:title="Groups" />
+        <item
+            android:id="@+id/nav_create_group"
+            android:icon="@drawable/ic_create_event"
+            android:title="Create Group" />
     </group>
 
 </menu>
