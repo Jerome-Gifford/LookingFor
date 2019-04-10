@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity
     TextView eView;
     String profileImageUrl;
     User user = new User();
+    MyFirebaseInstanceIDService instanceIDService = new MyFirebaseInstanceIDService();
+    MyFirebaseMessagingService messagingService = new MyFirebaseMessagingService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class MainActivity extends AppCompatActivity
             user.setUserPhoto(fbUser.getPhotoUrl().toString());
             user.setUserId(fbUser.getUid());
         }
+
+        instanceIDService.initFCM();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
