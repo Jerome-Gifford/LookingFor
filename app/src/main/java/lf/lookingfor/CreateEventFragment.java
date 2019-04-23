@@ -1,5 +1,6 @@
 package lf.lookingfor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -79,6 +80,7 @@ public class CreateEventFragment extends Fragment {
                 String eventResult = createEvent(mainView);
                 if(eventResult.equals("Event Created")) {
                     Toast.makeText(getActivity(), "Event Created", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getContext(), MainActivity.class));
                 }
                 else {
                     Toast.makeText(getActivity(), "You are missing " + eventResult, Toast.LENGTH_SHORT).show();

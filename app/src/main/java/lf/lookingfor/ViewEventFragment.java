@@ -1,5 +1,6 @@
 package lf.lookingfor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -127,8 +128,25 @@ public class ViewEventFragment extends Fragment {
     }
 
     private void cancelEvent() {
+        final DatabaseReference myRefRegUsers = myRef2.child(registration.getEventId()).child("registeredUsers");
+        final DatabaseReference myRefNotify = database.getReference("notifications");
+        myRefRegUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    String userId = messageSnapshot.getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         myRef2.child(registration.getEventId()).removeValue();
         myRef.child(registrationId).removeValue();
+        Toast.makeText(getActivity(), "Event Cancelled", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getContext(), MainActivity.class));
     }
 
     private View.OnClickListener btnListener = new View.OnClickListener() {
@@ -139,6 +157,8 @@ public class ViewEventFragment extends Fragment {
             final String userId = fUser.getUid();
             registration.addUser(userId);
             myRef.child(registrationId).setValue(registration);
+            Toast.makeText(getActivity(), "Event Joined", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getContext(), MainActivity.class));
         }
 
     };
