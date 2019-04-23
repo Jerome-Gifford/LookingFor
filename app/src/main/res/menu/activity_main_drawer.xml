@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home"
-            android:title="Home" />
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/eventGroup">
         <item
             android:id="@+id/nav_findEvent"
             android:icon="@drawable/ic_find_event"
@@ -24,6 +26,26 @@
             android:id="@+id/nav_viewMap"
             android:icon="@drawable/ic_map_mrker"
             android:title="View Map" />
+    </group>
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/usersGroup">
+        <item
+            android:id="@+id/nav_users"
+            android:icon="@drawable/ic_users_foreground"
+            android:title="Users" />
+        <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_groups_foreground"
+            android:title="Groups" />
+        <item
+            android:id="@+id/nav_create_group"
+            android:icon="@drawable/ic_newgroups_foreground"
+            android:title="Create Group" />
+    </group>
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/settingsGroup">
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_my_profile"
@@ -36,18 +58,5 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_send"
             android:title="Log out" />
-        <item
-            android:id="@+id/nav_users"
-            android:icon="@drawable/ic_my_profile"
-            android:title="Users" />
-        <item
-            android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_my_profile"
-            android:title="Groups" />
-        <item
-            android:id="@+id/nav_create_group"
-            android:icon="@drawable/ic_create_event"
-            android:title="Create Group" />
     </group>
-
 </menu>
