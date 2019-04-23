@@ -14,12 +14,12 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     public void initFCM() {
         String recentToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(msgToken, recentToken);
+        //Log.d(msgToken, recentToken);
         sendRegistrationToServer(recentToken);
     }
 
     public void sendRegistrationToServer(String token){
-        Log.d(msgToken, "sendRegistrationToServer: sending token to server: " + token);
+        //Log.d(msgToken, "sendRegistrationToServer: sending token to server: " + token);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
         reference.child(mAuth.getCurrentUser().getUid()).child("messaging_token").setValue(token);
     }
