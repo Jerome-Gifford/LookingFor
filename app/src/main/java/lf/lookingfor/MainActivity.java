@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     FirebaseStorage storage = FirebaseStorage.getInstance();
     NavigationView navigationView;
     View headerView;
-    int mapRadius = 1600;
+    double mapRadius = 1600;
     EditText radiusEdit;
     ImageView proPic;
     TextView nView;
@@ -307,10 +307,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         else if (id == R.id.nav_viewMap){
-            int rad;
+            double rad;
             try {
                 rad = Integer.parseInt(radiusEdit.getText().toString());
+                rad = rad * 1609.34;
                 mapRadius = rad;
+                //double miles = rad/1609.34; //Convert to miles
                 if( rad < 20 || rad > 99999){
                     radiusEdit.setFocusable(View.FOCUSABLE);
                     Toast.makeText(MainActivity.this, "Enter a search radius between 20 and 99999 meters.", Toast.LENGTH_SHORT).show();
