@@ -20,29 +20,4 @@
         android:hint="Enter event search radius in meters"
         android:inputType="number"
         android:text="1000" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Map at Address:"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Address"
-        android:id="@+id/addressView"
-        android:inputType="textPostalAddress"/>
-
-    <Button
-        android:id="@+id/address_map_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="View Map at Address"
-        android:textStyle="bold" />
 </LinearLayout>
