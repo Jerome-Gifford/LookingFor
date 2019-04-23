@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ViewEventFragment extends Fragment {
     Event event;
@@ -106,9 +107,7 @@ public class ViewEventFragment extends Fragment {
                     String userId = messageSnapshot.getKey();
                     if(registration.getRegisteredUsers().contains(userId)){
                         users += messageSnapshot.child("displayName").getValue().toString() + ", ";
-                        for(int i = 0; i < regUserIds.size(); i++){
-                            regUserTokens.add(messageSnapshot.child("messaging_token").getValue().toString());
-                        }
+                        regUserTokens.add(messageSnapshot.child("messaging_token").getValue().toString());
                         updateMembers();
                     }
                 }
@@ -139,10 +138,11 @@ public class ViewEventFragment extends Fragment {
 
     private void cancelEvent() {
         if(regUserIds.size() == regUserTokens.size()){
+            Collections.reverse(regUserIds);
             for(int i = 0; i < regUserIds.size(); i++){
-                Notification notification = new Notification("Your event " + event.getName() + " has been cancelled", regUserTokens.get(i), regUserIds.get(i));
-                myRef3.setValue(regUserIds.get(i));
-                final DatabaseReference finalRef = myRef3.child(regUserIds.get(i));
+                Notification notification = new Notification("Cancellation Notification", "Your event " + event.getName() + " has been cancelled", regUserTokens.get(i), regUserIds.get(i));
+                DatabaseReference notificationsReference = database.getReference("notifications");
+                final DatabaseReference finalRef = notificationsReference.child(regUserIds.get(i));
                 finalRef.setValue(notification);
             }
         }

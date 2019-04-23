@@ -4,16 +4,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Notification implements Parcelable {
-    private String message;
+    private String title;
+    private String body;
     private  String token;
     private String uid;
 
-    public String getMessage() {
-        return message;
+    public String getBody() {
+        return body;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getToken() {
@@ -39,13 +52,15 @@ public class Notification implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.message);
+        dest.writeString(this.title);
+        dest.writeString(this.body);
         dest.writeString(this.token);
         dest.writeString(this.uid);
     }
 
     protected Notification(Parcel in) {
-        message = in.readString();
+        title = in.readString();
+        body = in.readString();
         token = in.readString();
         uid = in.readString();
     }
@@ -67,13 +82,14 @@ public class Notification implements Parcelable {
     }
 
     public Notification(Notification copyNotification){
-        this.message = copyNotification.message;
+        this.title = copyNotification.title;
         this.token = copyNotification.token;
         this.uid = copyNotification.uid;
     }
 
-    public Notification(String message, String token, String uid){
-        this.message = message;
+    public Notification(String title, String body, String token, String uid){
+        this.title = title;
+        this.body = body;
         this.token = token;
         this.uid = uid;
     }
