@@ -2,6 +2,7 @@ package lf.lookingfor;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class ViewEventFragment extends Fragment {
     Event event;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -33,6 +36,9 @@ public class ViewEventFragment extends Fragment {
     String users = "";
     final DatabaseReference myRef = database.getReference("registration");
     final DatabaseReference myRef2 = database.getReference("events");
+    final DatabaseReference myRef3 = database.getReference("notifications");
+    ArrayList<String> regUserIds = new ArrayList<String>();
+    ArrayList<String> regUserTokens = new ArrayList<String>();
     String registrationId;
     TextView eventMembers;
 
@@ -79,6 +85,7 @@ public class ViewEventFragment extends Fragment {
                             joinButton.setClickable(false);
                             joinButton.setText("Event Full");
                         }
+                        regUserIds = registration.getRegisteredUsers();
                         break;
                     }
                 }
@@ -99,6 +106,9 @@ public class ViewEventFragment extends Fragment {
                     String userId = messageSnapshot.getKey();
                     if(registration.getRegisteredUsers().contains(userId)){
                         users += messageSnapshot.child("displayName").getValue().toString() + ", ";
+                        for(int i = 0; i < regUserIds.size(); i++){
+                            regUserTokens.add(messageSnapshot.child("messaging_token").getValue().toString());
+                        }
                         updateMembers();
                     }
                 }
@@ -128,21 +138,14 @@ public class ViewEventFragment extends Fragment {
     }
 
     private void cancelEvent() {
-        final DatabaseReference myRefRegUsers = myRef2.child(registration.getEventId()).child("registeredUsers");
-        final DatabaseReference myRefNotify = database.getReference("notifications");
-        myRefRegUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    String userId = messageSnapshot.getValue().toString();
-                }
+        if(regUserIds.size() == regUserTokens.size()){
+            for(int i = 0; i < regUserIds.size(); i++){
+                Notification notification = new Notification("Your event " + event.getName() + " has been cancelled", regUserTokens.get(i), regUserIds.get(i));
+                myRef3.setValue(regUserIds.get(i));
+                final DatabaseReference finalRef = myRef3.child(regUserIds.get(i));
+                finalRef.setValue(notification);
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        }
         myRef2.child(registration.getEventId()).removeValue();
         myRef.child(registrationId).removeValue();
         Toast.makeText(getActivity(), "Event Cancelled", Toast.LENGTH_SHORT).show();

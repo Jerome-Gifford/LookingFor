@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 public class Notification implements Parcelable {
     private String message;
+    private  String token;
+    private String uid;
 
     public String getMessage() {
         return message;
@@ -26,12 +28,9 @@ public class Notification implements Parcelable {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setId(String uid) {
         this.uid = uid;
     }
-
-    private  String token;
-    private String uid;
 
     @Override
     public int describeContents() {
