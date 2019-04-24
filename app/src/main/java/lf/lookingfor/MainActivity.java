@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     FirebaseStorage storage = FirebaseStorage.getInstance();
     NavigationView navigationView;
     View headerView;
-    double mapRadius = 1600;
+    int mapRadius = 1609;
     EditText radiusEdit;
     ImageView proPic;
     TextView nView;
@@ -307,10 +307,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         else if (id == R.id.nav_viewMap){
-            double rad;
+            int rad;
             try {
                 rad = Integer.parseInt(radiusEdit.getText().toString());
-                rad = rad * 1609.34;
+                rad = rad * 1609;
                 mapRadius = rad;
                 //double miles = rad/1609.34; //Convert to miles
                 if( rad < 20 || rad > 99999){

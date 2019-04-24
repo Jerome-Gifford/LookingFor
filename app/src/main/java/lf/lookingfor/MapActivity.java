@@ -37,7 +37,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     DatabaseHandler dbHandler = new DatabaseHandler();
     ArrayList<Event> events = new ArrayList<>();
     HashMap<MarkerOptions, Event> eventMap = new HashMap<>();
-    int mapRadius = 1000;
+    double mapRadius = 1000;
     LocationManager locationManager;
     Location lastKnownLocation;
 
