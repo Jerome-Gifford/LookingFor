@@ -141,9 +141,11 @@ public class ViewEventFragment extends Fragment {
             Collections.reverse(regUserIds);
             for(int i = 0; i < regUserIds.size(); i++){
                 Notification notification = new Notification("Cancellation Notification", "Your event " + event.getName() + " has been cancelled", regUserTokens.get(i), regUserIds.get(i));
-                DatabaseReference notificationsReference = database.getReference("notifications");
-                final DatabaseReference finalRef = notificationsReference.child(regUserIds.get(i));
-                finalRef.setValue(notification);
+                DatabaseReference notificationsReference = database.getReference("notifications").push();
+                String id = notificationsReference.getKey();
+                notificationsReference.setValue(notification);
+                //final DatabaseReference finalRef = notificationsReference.child(regUserIds.get(i));
+                //finalRef.setValue(notification);
             }
         }
         myRef2.child(registration.getEventId()).removeValue();
