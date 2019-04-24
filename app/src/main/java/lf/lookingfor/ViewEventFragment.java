@@ -112,28 +112,7 @@ public class ViewEventFragment extends Fragment {
                         break;
                     }
                 }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read has failed");
-            }
-        });
-
-        final DatabaseReference myRefUsers = database.getReference("users");
-        myRefUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                    String userId = messageSnapshot.getKey();
-                    if(registration.getRegisteredUsers().contains(userId)){
-                        users += messageSnapshot.child("displayName").getValue().toString() + ", ";
-                        regUserTokens.add(messageSnapshot.child("messaging_token").getValue().toString());
-                        updateMembers();
-                    }
-                }
-
+                addUsers();
             }
 
             @Override
@@ -193,6 +172,30 @@ public class ViewEventFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void addUsers() {
+        final DatabaseReference myRefUsers = database.getReference("users");
+        myRefUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    String userId = messageSnapshot.getKey();
+                    if(registration.getRegisteredUsers().contains(userId)){
+                        users += messageSnapshot.child("displayName").getValue().toString() + ", ";
+                        regUserTokens.add(messageSnapshot.child("messaging_token").getValue().toString());
+                        updateMembers();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read has failed");
+            }
+        });
+
     }
 
     private void cancelEvent() {
