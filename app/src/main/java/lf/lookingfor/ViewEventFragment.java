@@ -30,7 +30,7 @@ import java.util.Collections;
 public class ViewEventFragment extends Fragment {
     Event event;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    Registration registration;
+    Registration registration = new Registration();
     FirebaseUser fUser;
     FirebaseAuth fAuth;
     String userId;
