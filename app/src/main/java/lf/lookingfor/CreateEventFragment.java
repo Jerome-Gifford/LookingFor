@@ -58,6 +58,13 @@ public class CreateEventFragment extends Fragment {
     public void onViewCreated(@NonNull final View mainView, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(mainView, savedInstanceState);
         DatabaseReference myRef = database.getReference("categories");
+        event_date= (EditText) mainView.findViewById(R.id.event_date);
+        event_date.setOnClickListener(new MyEditTextDatePicker(getContext(), R.id.event_date));
+        start_time= (EditText) mainView.findViewById(R.id.start_time);
+        start_time.setOnClickListener(new MyEditTextTimePicker(getContext(), R.id.start_time));
+        end_time= (EditText) mainView.findViewById(R.id.end_time);
+        end_time.setOnClickListener(new MyEditTextTimePicker(getContext(), R.id.end_time));
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
