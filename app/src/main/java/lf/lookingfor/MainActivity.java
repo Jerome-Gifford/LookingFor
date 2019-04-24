@@ -315,14 +315,14 @@ public class MainActivity extends AppCompatActivity
                 //double miles = rad/1609.34; //Convert to miles
                 if( rad < 20 || rad > 99999){
                     radiusEdit.setFocusable(View.FOCUSABLE);
-                    Toast.makeText(MainActivity.this, "Enter a search radius between 20 and 99999 meters.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Enter a search radius between 1 and 50 miles.", Toast.LENGTH_SHORT).show();
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                     drawer.closeDrawer(GravityCompat.START);
                     return false;
                 }
             } catch (Exception e){
                 radiusEdit.setFocusable(View.FOCUSABLE);
-                Toast.makeText(MainActivity.this, "Enter a search radius between 20 and 99999 meters.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Enter a search radius between 1 and 50 miles.", Toast.LENGTH_SHORT).show();
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return false;

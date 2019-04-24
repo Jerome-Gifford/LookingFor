@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tools:android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ViewEventFragment">
 
     <LinearLayout
@@ -10,60 +10,81 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/event_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
+            android:text="TITLE"
             android:textColor="@android:color/black"
-            android:text="TITLE"/>
+            android:textSize="30sp" />
+
         <TextView
             android:id="@+id/event_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="desc"/>
+            android:text="desc" />
+
         <TextView
             android:id="@+id/event_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DATE"/>
+            android:text="DATE" />
+
         <TextView
             android:id="@+id/event_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time"/>
+            android:text="Time" />
+
         <TextView
             android:id="@+id/event_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LOCATION"/>
+            android:text="LOCATION" />
+
         <TextView
             android:id="@+id/event_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CATEGORY"/>
+            android:text="CATEGORY" />
+
         <TextView
             android:id="@+id/event_participant_numbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PARTICIPANTS"/>
+            android:text="PARTICIPANTS" />
+
         <TextView
             android:id="@+id/event_members"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MEMBERS"/>
+            android:text="MEMBERS" />
+
         <Button
             android:id="@+id/btn_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Join Event" />
+
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cancel Event" />
+
+        <Button
+            android:id="@+id/btn_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Invite a group to join"/>
+
+        <Spinner
+            android:id="@+id/groupSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textAlignment="center"></Spinner>
     </LinearLayout>
 
 
-
-</tools:android.support.constraint.ConstraintLayout>
+</LinearLayout>
